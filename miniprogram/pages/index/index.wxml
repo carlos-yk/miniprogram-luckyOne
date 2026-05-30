@@ -1,0 +1,226 @@
+<view class="page" style="padding-top: {{statusBarHeight}}px;">
+  <view class="ambient ambient-red"></view>
+  <view class="ambient ambient-blue"></view>
+
+  <view class="home">
+    <view class="brand-row">
+      <view>
+        <view class="brand-en">LUCK7</view>
+        <view class="brand-cn">今日一注</view>
+      </view>
+      <view class="date-chip">
+        <text>{{todayText}}</text>
+        <text>双色球</text>
+      </view>
+    </view>
+
+    <view class="home-stats">
+      <view class="stat-card stat-primary">
+        <text class="stat-label">今日已摇次数</text>
+        <view class="stat-value-line">
+          <text class="stat-value">{{homeStats.todayCountText}}</text>
+          <text class="stat-unit">次</text>
+        </view>
+      </view>
+      <view class="stat-card">
+        <text class="stat-label">最近一次生成时间</text>
+        <view class="stat-value-line">
+          <text class="stat-value">{{homeStats.latestTimeText}}</text>
+        </view>
+      </view>
+      <view class="stat-card">
+        <text class="stat-label">历史票根数</text>
+        <view class="stat-value-line">
+          <text class="stat-value">{{homeStats.totalText}}</text>
+          <text class="stat-unit">张</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="machine-shell {{isDrawing ? 'machine-drawing' : ''}}">
+      <view class="marquee">
+        <view class="marquee-title">TODAY LUCKY MACHINE</view>
+        <view class="bulbs">
+          <view wx:for="{{bulbs}}" wx:key="*this" class="bulb"></view>
+        </view>
+      </view>
+
+      <view class="machine-stage">
+        <view class="reel-panel">
+          <view class="screen-label">
+            <text>{{phaseText}}</text>
+            <text class="screen-rule">红球 6 + 蓝球 1</text>
+          </view>
+
+          <view class="reel-track">
+            <view wx:for="{{currentReds}}" wx:key="index" class="reel red {{lockedRedCount > index ? 'reel-locked' : ''}}">
+              <text>{{item}}</text>
+            </view>
+            <view class="divider">|</view>
+            <view class="reel blue {{blueLocked ? 'reel-locked blue-pop' : ''}}">
+              <text>{{currentBlue}}</text>
+            </view>
+          </view>
+
+          <view class="meter-row">
+            <view class="meter-light {{isDrawing ? 'active' : ''}}"></view>
+            <text>{{machineHint}}</text>
+          </view>
+
+          <button class="machine-start-btn {{isDrawing ? 'disabled' : ''}}" bindtap="onStartButtonTap">
+            <text class="start-dot"></text>
+            <text>{{startButtonText}}</text>
+          </button>
+        </view>
+
+        <view class="lever-zone">
+          <view class="lever-track">
+            <view
+              class="lever {{isDrawing ? 'lever-locked' : ''}}"
+              style="transform: rotate({{leverAngle}}deg);"
+              bindtap="onLeverTap"
+              bindtouchstart="onLeverTouchStart"
+              bindtouchmove="onLeverTouchMove"
+              bindtouchend="onLeverTouchEnd"
+              bindtouchcancel="onLeverTouchEnd"
+            >
+              <view class="lever-stick"></view>
+              <view class="lever-ball"></view>
+            </view>
+          </view>
+          <view class="lever-base"></view>
+          <view class="lever-copy">{{leverText}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="summary-panel">
+      <view class="summary-copy">
+        <text class="summary-title">{{currentSummary.title}}</text>
+      </view>
+      <view class="summary-grid">
+        <view class="summary-item">
+          <text>和值</text>
+          <text>{{currentSummary.sumText}}</text>
+        </view>
+        <view class="summary-item">
+          <text>奇偶</text>
+          <text>{{currentSummary.parityText}}</text>
+        </view>
+        <view class="summary-item">
+          <text>大小</text>
+          <text>{{currentSummary.sizeText}}</text>
+        </view>
+        <view class="summary-item">
+          <text>时间</text>
+          <text>{{currentSummary.timeText}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="history-section">
+      <view class="history-head">
+        <text>最近好运票根</text>
+        <text>{{history.length}} / 10</text>
+      </view>
+
+      <view class="ticket-viewport">
+        <view
+          class="ticket-row {{ticketMarqueeTransition ? 'ticket-row-animating' : ''}}"
+          style="transform: translateY(-{{ticketMarqueeOffset}}rpx);"
+        >
+          <block wx:if="{{history.length}}">
+            <view
+              wx:for="{{marqueeHistory}}"
+              wx:key="marqueeKey"
+              class="ticket"
+              data-id="{{item.id}}"
+              bindtap="openTicketDetail"
+            >
+              <view class="ticket-time">
+                <text>{{item.type}}</text>
+                <text>{{item.timeText}}</text>
+              </view>
+              <view class="ticket-main">
+                <view class="ticket-label">{{item.label}}</view>
+                <view class="ticket-numbers">
+                  <text class="ticket-reds">{{item.redsText}}</text>
+                  <text class="ticket-blue">{{item.blueText}}</text>
+                </view>
+              </view>
+            </view>
+          </block>
+
+          <view wx:else class="ticket ticket-empty">
+            <view class="ticket-time">
+              <text>双色球</text>
+              <text>等待开奖</text>
+            </view>
+            <view class="ticket-main">
+              <view class="ticket-label">拉下摇杆，生成第一张好运票根</view>
+              <view class="ticket-placeholder">-- -- -- -- -- -- | --</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="safe-note">号码随机生成，仅供娱乐。购彩请理性。</view>
+  </view>
+</view>
+
+<view wx:if="{{showResultModal}}" class="modal-mask" bindtap="closeResultModal">
+  <view class="celebration-layer">
+    <view wx:for="{{particles}}" wx:key="index" class="particle" style="{{item}}"></view>
+  </view>
+  <view class="result-card" catchtap="noop">
+    <view class="result-glow"></view>
+    <view class="result-title">🎉 今日幸运号码</view>
+    <view class="result-subtitle">好运已经降临，记得分享给朋友～</view>
+
+    <view class="result-balls" wx:if="{{finalRecord}}">
+      <view wx:for="{{finalRecord.redsTextList}}" wx:key="index" class="result-ball red">
+        <text>{{item}}</text>
+      </view>
+      <view class="result-ball blue">
+        <text>{{finalRecord.blueText}}</text>
+      </view>
+    </view>
+
+    <view class="modal-actions">
+      <button class="modal-btn ghost" bindtap="saveCurrentPoster">截图保存</button>
+      <button class="modal-btn secondary" open-type="share" data-record-id="{{finalRecord.id}}">分享好友</button>
+      <button class="modal-btn primary" bindtap="drawAgain">再来一注</button>
+    </view>
+  </view>
+</view>
+
+<view wx:if="{{showTicketSheet}}" class="sheet-mask" bindtap="closeTicketSheet">
+  <view class="ticket-sheet" catchtap="noop">
+    <view class="sheet-handle"></view>
+    <view wx:if="{{activeTicket}}" class="sheet-ticket">
+      <view class="sheet-top">
+        <view>
+          <view class="sheet-title">历史幸运票根</view>
+          <view class="sheet-time">{{activeTicket.dateText}} {{activeTicket.timeText}}</view>
+        </view>
+        <view class="sheet-tag">{{activeTicket.label}}</view>
+      </view>
+
+      <view class="sheet-balls">
+        <view wx:for="{{activeTicket.redsTextList}}" wx:key="index" class="sheet-ball red">{{item}}</view>
+        <view class="sheet-ball blue">{{activeTicket.blueText}}</view>
+      </view>
+
+      <view class="sheet-display">{{activeTicket.display}}</view>
+
+      <view class="sheet-actions">
+        <button class="sheet-btn primary" bindtap="saveActiveTicketPoster">保存好运图</button>
+        <button class="sheet-btn secondary" open-type="share" data-record-id="{{activeTicket.id}}">分享好友</button>
+        <button class="sheet-btn ghost" bindtap="copyActiveTicket">复制号码</button>
+      </view>
+    </view>
+  </view>
+</view>
+
+<canvas canvas-id="posterCanvas" class="poster-canvas"></canvas>
