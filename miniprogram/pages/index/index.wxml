@@ -14,29 +14,6 @@
       </view>
     </view>
 
-    <view class="home-stats">
-      <view class="stat-card stat-primary">
-        <text class="stat-label">今日生成次数</text>
-        <view class="stat-value-line">
-          <text class="stat-value">{{homeStats.todayCountText}}</text>
-          <text class="stat-unit">次</text>
-        </view>
-      </view>
-      <view class="stat-card">
-        <text class="stat-label">最近一次生成时间</text>
-        <view class="stat-value-line">
-          <text class="stat-value">{{homeStats.latestTimeText}}</text>
-        </view>
-      </view>
-      <view class="stat-card">
-        <text class="stat-label">历史记录数</text>
-        <view class="stat-value-line">
-          <text class="stat-value">{{homeStats.totalText}}</text>
-          <text class="stat-unit">张</text>
-        </view>
-      </view>
-    </view>
-
     <scroll-view class="play-switcher" scroll-x enable-flex>
       <view class="play-tabs">
         <view
@@ -53,6 +30,14 @@
     </scroll-view>
 
     <view class="machine-shell {{isDrawing ? 'machine-drawing' : ''}}">
+      <view class="stage-hero-head">
+        <view>
+          <view class="stage-kicker">{{activePlay.shortName}} · {{activePlay.ruleText}}</view>
+          <view class="stage-title">{{activePlay.name}}</view>
+        </view>
+        <view class="stage-status">{{phaseText}}</view>
+      </view>
+
       <view class="marquee">
         <view class="marquee-title">{{activePlay.machineTitle}}</view>
         <view class="bulbs">
@@ -81,11 +66,6 @@
             <view class="meter-light {{isDrawing ? 'active' : ''}}"></view>
             <text>{{machineHint}}</text>
           </view>
-
-          <button class="machine-start-btn {{isDrawing ? 'disabled' : ''}}" bindtap="onStartButtonTap">
-            <text class="start-dot"></text>
-            <text>{{startButtonText}}</text>
-          </button>
         </view>
 
         <view wx:if="{{activeGameId === 'ssq'}}" class="lever-zone">
@@ -126,10 +106,6 @@
               </view>
             </view>
           </view>
-          <button class="machine-start-btn {{isDrawing ? 'disabled' : ''}}" bindtap="onStartButtonTap">
-            <text class="start-dot"></text>
-            <text>{{startButtonText}}</text>
-          </button>
         </view>
 
         <view wx:elif="{{activeGameId === 'fc3d'}}" class="play-stage stage-flip">
@@ -143,10 +119,6 @@
               <text class="digit-value">{{item}}</text>
             </view>
           </view>
-          <button class="machine-start-btn warm {{isDrawing ? 'disabled' : ''}}" bindtap="onStartButtonTap">
-            <text class="start-dot"></text>
-            <text>{{startButtonText}}</text>
-          </button>
         </view>
 
         <view wx:elif="{{activeGameId === 'kl8'}}" class="play-stage stage-matrix">
@@ -171,10 +143,6 @@
               <text>{{item.text}}</text>
             </view>
           </view>
-          <button class="machine-start-btn purple {{isDrawing ? 'disabled' : ''}}" bindtap="onStartButtonTap">
-            <text class="start-dot"></text>
-            <text>{{startButtonText}}</text>
-          </button>
         </view>
 
         <view wx:elif="{{activeGameId === 'pl5'}}" class="play-stage stage-password">
@@ -189,70 +157,68 @@
             </view>
             <view class="scan-line"></view>
           </view>
-          <button class="machine-start-btn green {{isDrawing ? 'disabled' : ''}}" bindtap="onStartButtonTap">
-            <text class="start-dot"></text>
-            <text>{{startButtonText}}</text>
-          </button>
         </view>
+      </view>
+
+      <view class="stage-action-row">
+        <button class="machine-start-btn stage-primary-cta cta-{{activePlay.accent}} {{isDrawing ? 'disabled' : ''}}" bindtap="onStartButtonTap">
+          <text class="start-dot"></text>
+          <text>{{startButtonText}}</text>
+        </button>
       </view>
     </view>
 
-    <view class="summary-panel">
-      <view class="summary-copy">
-        <text class="summary-title">{{currentSummary.title}}</text>
+    <view class="support-deck">
+      <view class="support-line">
+        <text>今日 {{homeStats.todayCountText}} 次</text>
+        <text>最近 {{homeStats.latestTimeText}}</text>
+        <text>记录 {{homeStats.totalText}} 张</text>
       </view>
-      <view class="summary-grid">
-        <view wx:for="{{currentSummary.items}}" wx:key="label" class="summary-item">
-          <text>{{item.label}}</text>
-          <text>{{item.value}}</text>
+
+      <view class="summary-panel">
+        <view class="summary-copy">
+          <text class="summary-title">{{currentSummary.title}}</text>
         </view>
-      </view>
-    </view>
-
-    <view class="history-section">
-      <view class="history-head">
-        <text>最近记录</text>
-        <text>{{activeHistory.length}} / 10</text>
-      </view>
-
-      <view class="ticket-viewport">
-        <view
-          class="ticket-row {{ticketMarqueeTransition ? 'ticket-row-animating' : ''}}"
-          style="transform: translateY(-{{ticketMarqueeOffset}}rpx);"
-        >
-          <block wx:if="{{activeHistory.length}}">
-            <view
-              wx:for="{{marqueeHistory}}"
-              wx:key="marqueeKey"
-              class="ticket"
-              data-id="{{item.id}}"
-              bindtap="openTicketDetail"
-            >
-              <view class="ticket-time">
-                <text>{{item.compactTypeText}}</text>
-                <text>{{item.timeText}}</text>
-              </view>
-              <view class="ticket-main">
-                <view class="ticket-label">{{item.label}}</view>
-                <view class="ticket-numbers">
-                  <text class="ticket-reds">{{item.primaryText}}</text>
-                  <text class="ticket-blue">{{item.secondaryText}}</text>
-                </view>
-              </view>
+        <view class="summary-grid">
+          <block wx:for="{{currentSummary.items}}" wx:key="label">
+            <view wx:if="{{index < 3}}" class="summary-item">
+              <text>{{item.label}}</text>
+              <text>{{item.value}}</text>
             </view>
           </block>
+        </view>
+      </view>
 
-          <view wx:else class="ticket ticket-empty">
-            <view class="ticket-time">
-              <text>{{activePlay.shortName}}</text>
-              <text>等待生成</text>
+      <view class="history-section">
+        <view class="history-head">
+          <text>最近记录</text>
+          <text>{{activeHistory.length}} / 10</text>
+        </view>
+
+        <view wx:if="{{activeHistory.length}}" class="recent-card" data-id="{{activeHistory[0].id}}" bindtap="openTicketDetail">
+          <view class="ticket-time">
+            <text>{{activeHistory[0].compactTypeText}}</text>
+            <text>{{activeHistory[0].timeText}}</text>
+          </view>
+          <view class="ticket-main">
+            <view class="ticket-label">{{activeHistory[0].label}}</view>
+            <view class="ticket-numbers">
+              <text class="ticket-reds">{{activeHistory[0].primaryText}}</text>
+              <text class="ticket-blue">{{activeHistory[0].secondaryText}}</text>
             </view>
-            <view class="ticket-main">
-              <view class="ticket-label">点击生成，保存第一张记录卡</view>
-              <view class="ticket-placeholder">
-                <text>{{currentResult.groups[0].text}}</text>
-                <text wx:if="{{currentResult.groups[1]}}"> | {{currentResult.groups[1].text}}</text>
-              </view>
+          </view>
+        </view>
+
+        <view wx:else class="recent-card recent-empty">
+          <view class="ticket-time">
+            <text>{{activePlay.shortName}}</text>
+            <text>等待生成</text>
+          </view>
+          <view class="ticket-main">
+            <view class="ticket-label">生成后会保存为记录卡</view>
+            <view class="ticket-placeholder">
+              <text>{{currentResult.groups[0].text}}</text>
+              <text wx:if="{{currentResult.groups[1]}}"> | {{currentResult.groups[1].text}}</text>
             </view>
           </view>
         </view>
@@ -267,11 +233,15 @@
   <view class="celebration-layer">
     <view wx:for="{{particles}}" wx:key="index" class="particle" style="{{item}}"></view>
   </view>
-  <view class="result-card" catchtap="noop">
+  <view class="result-card result-card-{{finalRecord.gameId}}" catchtap="noop">
     <view class="result-glow"></view>
-    <view class="result-title">号码已随机生成</view>
-    <view class="result-subtitle">可保存为记录卡，仅作娱乐记录</view>
-    <view wx:if="{{finalRecord.typeText}}" class="result-meta">{{finalRecord.typeText}}</view>
+    <view class="result-shine"></view>
+    <view class="result-card-top">
+      <text>LUCK7</text>
+      <text wx:if="{{finalRecord.typeText}}">{{finalRecord.typeText}}</text>
+    </view>
+    <view class="result-title">随机数字卡已成型</view>
+    <view class="result-subtitle">可保存为记录图，仅作娱乐记录</view>
 
     <view class="result-groups" wx:if="{{finalRecord}}">
       <view wx:for="{{finalRecord.groups}}" wx:for-item="group" wx:key="key" class="result-group">
@@ -283,6 +253,8 @@
         </view>
       </view>
     </view>
+
+    <view wx:if="{{finalRecord}}" class="result-display">{{finalRecord.display}}</view>
 
     <view class="modal-actions">
       <view class="modal-action-row">
