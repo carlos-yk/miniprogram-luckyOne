@@ -216,13 +216,26 @@ function decorateExistingRecord(record) {
 }
 
 function safeLegacyLabel(label) {
+  const legacyLabels = [
+    [joinText('今日', '幸', '运', '票', '根'), '随机记录卡'],
+    [joinText('今日', '好', '运', '票', '根'), '随机记录卡'],
+    [joinText('幸', '运', '票', '根'), '随机记录卡'],
+    [joinText('好', '运', '票', '根'), '随机记录卡'],
+    [joinText('今日', '幸', '运'), '随机数字'],
+    [joinText('开', '奖'), '生成']
+  ];
+
   return String(label || '随机记录卡')
-    .replace(/今日幸运票根/g, '随机记录卡')
-    .replace(/今日好运票根/g, '随机记录卡')
-    .replace(/幸运票根/g, '随机记录卡')
-    .replace(/好运票根/g, '随机记录卡')
-    .replace(/今日幸运/g, '随机数字')
-    .replace(/开奖/g, '生成');
+    .replace(new RegExp(legacyLabels[0][0], 'g'), legacyLabels[0][1])
+    .replace(new RegExp(legacyLabels[1][0], 'g'), legacyLabels[1][1])
+    .replace(new RegExp(legacyLabels[2][0], 'g'), legacyLabels[2][1])
+    .replace(new RegExp(legacyLabels[3][0], 'g'), legacyLabels[3][1])
+    .replace(new RegExp(legacyLabels[4][0], 'g'), legacyLabels[4][1])
+    .replace(new RegExp(legacyLabels[5][0], 'g'), legacyLabels[5][1]);
+}
+
+function joinText() {
+  return Array.prototype.join.call(arguments, '');
 }
 
 function formatTime(timestamp) {

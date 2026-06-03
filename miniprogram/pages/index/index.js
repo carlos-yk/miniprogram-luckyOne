@@ -713,7 +713,7 @@ Page({
     ctx.setFillStyle('rgba(255,255,255,0.52)');
     ctx.setFontSize(22);
     ctx.fillText(`${record.type} · ${record.dateText} ${record.timeText}`, 343, 724);
-    ctx.fillText('仅用于随机数字生成，不提供购买、预测或结果查询服务。', 343, 778);
+    ctx.fillText('仅用于随机数字生成，不提供交易、建议或结果查询服务。', 343, 778);
 
     ctx.draw(false, () => {
       setTimeout(done, 80);

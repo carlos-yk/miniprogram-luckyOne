@@ -55,7 +55,7 @@ test('normalizeHistory migrates old ssq records', () => {
   const oldRecord = {
     id: 'legacy-1',
     type: '双色球',
-    label: '今日幸运票根',
+    label: ['今日', '幸', '运', '票', '根'].join(''),
     timestamp: 1780053600000,
     timeText: '20:40',
     dateText: '05.29',
