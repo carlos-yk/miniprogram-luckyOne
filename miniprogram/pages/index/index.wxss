@@ -503,6 +503,7 @@
 
 .stage-matrix {
   padding: 18rpx 18rpx 16rpx;
+  gap: 10rpx;
 }
 
 .kl8-mode-tabs {
@@ -533,8 +534,8 @@
 
 .matrix-board {
   position: relative;
-  height: 164rpx;
-  padding: 10rpx;
+  height: 88rpx;
+  padding: 8rpx;
   border-radius: 24rpx;
   background: rgba(255, 255, 255, 0.035);
   border: 1rpx solid rgba(255, 255, 255, 0.08);
@@ -561,41 +562,48 @@
 
 .matrix-cell {
   min-width: 0;
-  height: 14rpx;
-  border-radius: 6rpx;
+  height: 8rpx;
+  border-radius: 999rpx;
   background: rgba(255, 255, 255, 0.07);
   color: rgba(255, 255, 255, 0.32);
-  font-size: 10rpx;
-  line-height: 14rpx;
+  font-size: 0;
+  line-height: 8rpx;
   text-align: center;
 }
 
 .matrix-cell.selected {
-  color: #fff;
+  color: transparent;
   background: rgba(85, 215, 255, 0.72);
   box-shadow: 0 0 12rpx rgba(85, 215, 255, 0.72);
 }
 
 .result-cloud {
-  min-height: 34rpx;
-  margin-top: 6rpx;
+  min-height: 104rpx;
+  margin: 6rpx 0 2rpx;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8rpx;
+  align-content: center;
+  gap: 12rpx;
 }
 
 .result-cloud text {
-  min-width: 38rpx;
-  height: 28rpx;
-  padding: 0 8rpx;
-  border-radius: 999rpx;
-  background: rgba(199, 125, 255, 0.18);
-  color: #d8b4ff;
-  font-size: 16rpx;
-  line-height: 28rpx;
+  min-width: 64rpx;
+  height: 48rpx;
+  padding: 0 14rpx;
+  border-radius: 18rpx;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.24), transparent 40%),
+    linear-gradient(180deg, rgba(199, 125, 255, 0.96), rgba(86, 124, 255, 0.72));
+  color: #fff;
+  font-size: 28rpx;
+  line-height: 48rpx;
   text-align: center;
-  font-weight: 800;
+  font-weight: 900;
+  font-family: "DIN Alternate", "Arial Rounded MT Bold", Arial, sans-serif;
+  box-shadow:
+    0 8rpx 20rpx rgba(116, 94, 255, 0.28),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.18);
 }
 
 .scan-line {
@@ -1607,29 +1615,29 @@
   }
 
   .matrix-board {
-    height: 136rpx;
+    height: 64rpx;
     padding: 8rpx;
     gap: 3rpx;
   }
 
   .matrix-cell {
-    height: 12rpx;
+    height: 6rpx;
     font-size: 0;
-    line-height: 12rpx;
+    line-height: 6rpx;
   }
 
   .result-cloud {
-    min-height: 30rpx;
-    margin-top: 4rpx;
-    gap: 6rpx;
+    min-height: 88rpx;
+    margin: 4rpx 0 0;
+    gap: 8rpx;
   }
 
   .result-cloud text {
-    min-width: 34rpx;
-    height: 26rpx;
-    padding: 0 6rpx;
-    font-size: 15rpx;
-    line-height: 26rpx;
+    min-width: 56rpx;
+    height: 40rpx;
+    padding: 0 12rpx;
+    font-size: 24rpx;
+    line-height: 40rpx;
   }
 
   .machine-start-btn {

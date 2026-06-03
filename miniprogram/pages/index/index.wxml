@@ -163,13 +163,13 @@
               bindtap="onModeTap"
             >{{item.label}}</view>
           </view>
+          <view class="result-cloud">
+            <text wx:for="{{currentResult.groups[0].textList}}" wx:key="index">{{item}}</text>
+          </view>
           <view class="matrix-board {{isDrawing ? 'scanning' : ''}}">
             <view wx:for="{{kl8Cells}}" wx:key="value" class="matrix-cell {{item.selected ? 'selected' : ''}}">
               <text>{{item.text}}</text>
             </view>
-          </view>
-          <view class="result-cloud">
-            <text wx:for="{{currentResult.groups[0].textList}}" wx:key="index">{{item}}</text>
           </view>
           <button class="machine-start-btn purple {{isDrawing ? 'disabled' : ''}}" bindtap="onStartButtonTap">
             <text class="start-dot"></text>
