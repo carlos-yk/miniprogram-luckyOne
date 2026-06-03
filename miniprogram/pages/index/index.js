@@ -19,7 +19,7 @@ const HISTORY_KEY = 'LUCK7_HISTORY';
 const HISTORY_LIMIT = 10;
 const LEVER_TRIGGER = 28;
 const TICKET_VISIBLE_COUNT = 3;
-const TICKET_STEP_RPX = 96;
+const TICKET_STEP_RPX = 108;
 const TICKET_MARQUEE_INTERVAL = 2200;
 const TICKET_MARQUEE_TRANSITION = 560;
 const RECORD_LABELS = [
@@ -615,13 +615,25 @@ Page({
     }
   },
 
+  copyCurrentRecord() {
+    if (!this.data.finalRecord) {
+      return;
+    }
+
+    this.copyRecord(this.data.finalRecord);
+  },
+
   copyActiveTicket() {
     if (!this.data.activeTicket) {
       return;
     }
 
+    this.copyRecord(this.data.activeTicket);
+  },
+
+  copyRecord(record) {
     wx.setClipboardData({
-      data: this.data.activeTicket.display,
+      data: record.display,
       success: () => {
         wx.showToast({
           title: '号码已复制',

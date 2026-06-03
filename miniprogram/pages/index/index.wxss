@@ -513,14 +513,14 @@
 
 .kl8-mode {
   flex: 1;
-  min-height: 88rpx;
+  min-height: 72rpx;
   padding: 0 8rpx;
   border-radius: 999rpx;
   background: rgba(255, 255, 255, 0.06);
   border: 1rpx solid rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.58);
   font-size: 18rpx;
-  line-height: 88rpx;
+  line-height: 72rpx;
   text-align: center;
   box-sizing: border-box;
 }
@@ -926,7 +926,7 @@
 }
 
 .history-section {
-  height: 330rpx;
+  height: 366rpx;
   flex-shrink: 0;
   margin-top: 18rpx;
   padding: 18rpx 0 16rpx;
@@ -955,7 +955,7 @@
 
 .ticket-viewport {
   width: 100%;
-  height: 276rpx;
+  height: 312rpx;
   overflow: hidden;
 }
 
@@ -972,7 +972,7 @@
 .ticket {
   position: relative;
   width: 100%;
-  height: 84rpx;
+  height: 96rpx;
   margin-bottom: 12rpx;
   padding: 10rpx 22rpx 10rpx 32rpx;
   border-radius: 20rpx;
@@ -995,7 +995,7 @@
 .ticket::after {
   content: "";
   position: absolute;
-  top: 30rpx;
+  top: 36rpx;
   width: 26rpx;
   height: 26rpx;
   border-radius: 50%;
@@ -1029,17 +1029,30 @@
 .ticket-label {
   margin-top: 0;
   color: #ffd166;
-  font-size: 24rpx;
+  font-size: 22rpx;
+  line-height: 24rpx;
   font-weight: 800;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.ticket-numbers,
+.ticket-numbers {
+  margin-top: 2rpx;
+  max-height: 50rpx;
+  color: #ff7b91;
+  font-size: 22rpx;
+  line-height: 25rpx;
+  font-weight: 900;
+  letter-spacing: 1rpx;
+  overflow: hidden;
+  white-space: normal;
+  word-break: normal;
+}
+
 .ticket-placeholder {
   margin-top: 2rpx;
-  font-size: 25rpx;
+  font-size: 22rpx;
   font-weight: 900;
   letter-spacing: 1rpx;
   overflow: hidden;
@@ -1048,10 +1061,12 @@
 }
 
 .ticket-reds {
+  display: inline;
   color: #ff7b91;
 }
 
 .ticket-blue {
+  display: inline;
   margin-left: 10rpx;
   color: #77a8ff;
 }
@@ -1274,17 +1289,17 @@
   position: relative;
   width: 88%;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 20rpx;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16rpx;
 }
 
 .modal-btn {
   width: 100%;
-  height: 76rpx;
+  height: 72rpx;
   border-radius: 999rpx;
   color: #fff;
-  font-size: 30rpx;
+  font-size: 24rpx;
   font-weight: 800;
   display: flex;
   align-items: center;
@@ -1300,7 +1315,8 @@
 }
 
 .modal-btn.primary {
-  height: 80rpx;
+  height: 72rpx;
+  font-size: 24rpx;
   background: linear-gradient(90deg, #ff6880, #ff2f68);
   box-shadow: 0 12rpx 32rpx rgba(255, 47, 104, 0.32);
 }
@@ -1551,6 +1567,57 @@
   .machine-stage {
     height: calc(100% - 96rpx);
     margin-top: 18rpx;
+  }
+
+  .play-stage {
+    padding: 18rpx 16rpx;
+  }
+
+  .stage-matrix {
+    padding: 14rpx;
+  }
+
+  .kl8-mode-tabs {
+    gap: 8rpx;
+    margin: 8rpx 0;
+  }
+
+  .kl8-mode {
+    min-height: 56rpx;
+    font-size: 17rpx;
+    line-height: 56rpx;
+  }
+
+  .matrix-board {
+    height: 136rpx;
+    padding: 8rpx;
+    gap: 3rpx;
+  }
+
+  .matrix-cell {
+    height: 12rpx;
+    font-size: 0;
+    line-height: 12rpx;
+  }
+
+  .result-cloud {
+    min-height: 30rpx;
+    margin-top: 4rpx;
+    gap: 6rpx;
+  }
+
+  .result-cloud text {
+    min-width: 34rpx;
+    height: 26rpx;
+    padding: 0 6rpx;
+    font-size: 15rpx;
+    line-height: 26rpx;
+  }
+
+  .machine-start-btn {
+    height: 72rpx;
+    margin-top: 10rpx;
+    font-size: 24rpx;
   }
 
   .reel-panel {
