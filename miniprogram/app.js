@@ -1,5 +1,5 @@
 App({
   globalData: {
-    appName: 'LUCK7 · 今日一注'
+    appName: 'LUCK7 · 随机数字卡'
   }
 });
