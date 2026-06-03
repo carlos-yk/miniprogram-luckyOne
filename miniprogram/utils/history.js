@@ -83,7 +83,13 @@ function pushHistoryRecord(history, record, limit) {
     unique.push(item);
   });
 
-  return unique.slice(0, max);
+  const scopedCounts = {};
+
+  return unique.filter((item) => {
+    const key = getHistoryScopeKey(item);
+    scopedCounts[key] = (scopedCounts[key] || 0) + 1;
+    return scopedCounts[key] <= max;
+  });
 }
 
 function filterHistoryByPlay(history, gameId, mode) {
@@ -94,6 +100,14 @@ function filterHistoryByPlay(history, gameId, mode) {
 
     return !mode || item.mode === mode;
   });
+}
+
+function getHistoryScopeKey(item) {
+  if (!item || !item.gameId) {
+    return 'legacy';
+  }
+
+  return `${item.gameId}:${item.mode || 'default'}`;
 }
 
 function createHomeStats(history, now, gameId, mode) {

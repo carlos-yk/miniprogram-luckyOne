@@ -90,6 +90,62 @@ test('pushHistoryRecord keeps newest records first and caps history', () => {
   assert.equal(result.some((item) => item.id === 'old-9'), false);
 });
 
+test('pushHistoryRecord caps records per play scope', () => {
+  const ssqRecords = Array.from({ length: 10 }, (_, index) => ({
+    id: `ssq-${index}`,
+    gameId: 'ssq',
+    mode: 'default',
+    display: `ssq-${index}`
+  }));
+  const dltRecords = Array.from({ length: 10 }, (_, index) => ({
+    id: `dlt-${index}`,
+    gameId: 'dlt',
+    mode: 'default',
+    display: `dlt-${index}`
+  }));
+  const newestSsq = {
+    id: 'ssq-newest',
+    gameId: 'ssq',
+    mode: 'default',
+    display: 'ssq-newest'
+  };
+
+  const result = pushHistoryRecord(ssqRecords.concat(dltRecords), newestSsq, 10);
+
+  assert.equal(result.filter((item) => item.gameId === 'ssq').length, 10);
+  assert.equal(result.filter((item) => item.gameId === 'dlt').length, 10);
+  assert.equal(result.some((item) => item.id === 'ssq-newest'), true);
+  assert.equal(result.some((item) => item.id === 'ssq-9'), false);
+});
+
+test('pushHistoryRecord caps kl8 records per mode', () => {
+  const select5Records = Array.from({ length: 10 }, (_, index) => ({
+    id: `kl8-5-${index}`,
+    gameId: 'kl8',
+    mode: 'select5',
+    display: `select5-${index}`
+  }));
+  const select10Records = Array.from({ length: 10 }, (_, index) => ({
+    id: `kl8-10-${index}`,
+    gameId: 'kl8',
+    mode: 'select10',
+    display: `select10-${index}`
+  }));
+  const newestSelect5 = {
+    id: 'kl8-5-newest',
+    gameId: 'kl8',
+    mode: 'select5',
+    display: 'select5-newest'
+  };
+
+  const result = pushHistoryRecord(select5Records.concat(select10Records), newestSelect5, 10);
+
+  assert.equal(result.filter((item) => item.gameId === 'kl8' && item.mode === 'select5').length, 10);
+  assert.equal(result.filter((item) => item.gameId === 'kl8' && item.mode === 'select10').length, 10);
+  assert.equal(result.some((item) => item.id === 'kl8-5-newest'), true);
+  assert.equal(result.some((item) => item.id === 'kl8-5-9'), false);
+});
+
 test('createHomeStats counts today records and latest history metadata', () => {
   const todayNewest = createHistoryRecord({
     reds: [2, 15, 16, 24, 26, 27],
