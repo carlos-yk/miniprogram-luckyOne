@@ -241,12 +241,7 @@ function createPlaySummary(result, previousRecord) {
   const timeText = result.timeText || '--:--';
 
   if (!values.length) {
-    return createSummary('本次号码摘要', [
-      { label: '和值', value: '--' },
-      { label: '奇偶', value: '--' },
-      { label: '大小', value: '--' },
-      { label: '时间', value: timeText }
-    ]);
+    return createSummary('本次号码摘要', getEmptySummaryItems(gameId, timeText));
   }
 
   if (gameId === 'dlt') {
@@ -317,6 +312,48 @@ function createPlaySummary(result, previousRecord) {
     { label: '蓝球', value: secondary.text || '--' },
     { label: '时间', value: timeText }
   ]);
+}
+
+function getEmptySummaryItems(gameId, timeText) {
+  const items = {
+    dlt: [
+      { label: '前区和值', value: '--' },
+      { label: '前区跨度', value: '--' },
+      { label: '前区奇偶', value: '--' },
+      { label: '后区组合', value: '--' },
+      { label: '时间', value: timeText }
+    ],
+    fc3d: [
+      { label: '三位和值', value: '--' },
+      { label: '奇偶分布', value: '--' },
+      { label: '重复情况', value: '--' },
+      { label: '首尾差', value: '--' },
+      { label: '时间', value: timeText }
+    ],
+    kl8: [
+      { label: '选择数量', value: '--' },
+      { label: '和值', value: '--' },
+      { label: '区间分布', value: '--' },
+      { label: '重复记录', value: '--' },
+      { label: '时间', value: timeText }
+    ],
+    pl5: [
+      { label: '五位和值', value: '--' },
+      { label: '奇偶分布', value: '--' },
+      { label: '大小分布', value: '--' },
+      { label: '重复数字', value: '--' },
+      { label: '时间', value: timeText }
+    ],
+    ssq: [
+      { label: '红球和值', value: '--' },
+      { label: '红球奇偶', value: '--' },
+      { label: '红球大小', value: '--' },
+      { label: '蓝球', value: '--' },
+      { label: '时间', value: timeText }
+    ]
+  };
+
+  return items[gameId] || items.ssq;
 }
 
 function generateSSQ() {

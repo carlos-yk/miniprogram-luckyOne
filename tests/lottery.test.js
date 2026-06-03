@@ -103,6 +103,18 @@ test('createEmptyPlayResult follows the play and mode shape', () => {
   assert.equal(empty.groups[0].text, '-- -- -- -- -- -- --');
 });
 
+test('createPlaySummary keeps empty state labels specific to the play', () => {
+  const summary = createPlaySummary(createEmptyPlayResult('dlt'));
+
+  assert.deepEqual(summary.items.map((item) => item.label), [
+    '前区和值',
+    '前区跨度',
+    '前区奇偶',
+    '后区组合',
+    '时间'
+  ]);
+});
+
 test('createPlaySummary returns play-specific summary items', () => {
   const summary = createPlaySummary({
     gameId: 'fc3d',
