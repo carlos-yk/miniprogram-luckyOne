@@ -6,17 +6,17 @@
     <view class="brand-row">
       <view>
         <view class="brand-en">LUCK7</view>
-        <view class="brand-cn">今日一注</view>
+        <view class="brand-cn">随机数字卡</view>
       </view>
       <view class="date-chip">
         <text>{{todayText}}</text>
-        <text>双色球</text>
+        <text>{{activePlay.shortName}}</text>
       </view>
     </view>
 
     <view class="home-stats">
       <view class="stat-card stat-primary">
-        <text class="stat-label">今日已摇次数</text>
+        <text class="stat-label">今日生成次数</text>
         <view class="stat-value-line">
           <text class="stat-value">{{homeStats.todayCountText}}</text>
           <text class="stat-unit">次</text>
@@ -29,7 +29,7 @@
         </view>
       </view>
       <view class="stat-card">
-        <text class="stat-label">历史票根数</text>
+        <text class="stat-label">历史记录数</text>
         <view class="stat-value-line">
           <text class="stat-value">{{homeStats.totalText}}</text>
           <text class="stat-unit">张</text>
@@ -37,16 +37,31 @@
       </view>
     </view>
 
+    <scroll-view class="play-switcher" scroll-x enable-flex>
+      <view class="play-tabs">
+        <view
+          wx:for="{{plays}}"
+          wx:key="id"
+          class="play-tab {{activeGameId === item.id ? 'active' : ''}} play-tab-{{item.accent}}"
+          data-game-id="{{item.id}}"
+          bindtap="onPlayTap"
+        >
+          <text class="play-tab-name">{{item.shortName}}</text>
+          <text class="play-tab-rule">{{item.ruleText}}</text>
+        </view>
+      </view>
+    </scroll-view>
+
     <view class="machine-shell {{isDrawing ? 'machine-drawing' : ''}}">
       <view class="marquee">
-        <view class="marquee-title">TODAY LUCKY MACHINE</view>
+        <view class="marquee-title">{{activePlay.machineTitle}}</view>
         <view class="bulbs">
           <view wx:for="{{bulbs}}" wx:key="*this" class="bulb"></view>
         </view>
       </view>
 
       <view class="machine-stage">
-        <view class="reel-panel">
+        <view wx:if="{{activeGameId === 'ssq'}}" class="reel-panel">
           <view class="screen-label">
             <text>{{phaseText}}</text>
             <text class="screen-rule">红球 6 + 蓝球 1</text>
@@ -73,7 +88,7 @@
           </button>
         </view>
 
-        <view class="lever-zone">
+        <view wx:if="{{activeGameId === 'ssq'}}" class="lever-zone">
           <view class="lever-track">
             <view
               class="lever {{isDrawing ? 'lever-locked' : ''}}"
@@ -91,6 +106,94 @@
           <view class="lever-base"></view>
           <view class="lever-copy">{{leverText}}</view>
         </view>
+
+        <view wx:elif="{{activeGameId === 'dlt'}}" class="play-stage stage-orbit">
+          <view class="screen-label">
+            <text>{{phaseText}}</text>
+            <text class="screen-rule">前区 5 + 后区 2</text>
+          </view>
+          <view class="orbit-board {{isDrawing ? 'scanning' : ''}}">
+            <view class="orbit-ring outer"></view>
+            <view class="orbit-ring inner"></view>
+            <view class="orbit-group front">
+              <view wx:for="{{currentResult.groups[0].textList}}" wx:key="index" class="orbit-chip front-chip">
+                <text>{{item}}</text>
+              </view>
+            </view>
+            <view class="orbit-group back">
+              <view wx:for="{{currentResult.groups[1].textList}}" wx:key="index" class="orbit-chip back-star">
+                <text>{{item}}</text>
+              </view>
+            </view>
+          </view>
+          <button class="machine-start-btn {{isDrawing ? 'disabled' : ''}}" bindtap="onStartButtonTap">
+            <text class="start-dot"></text>
+            <text>{{startButtonText}}</text>
+          </button>
+        </view>
+
+        <view wx:elif="{{activeGameId === 'fc3d'}}" class="play-stage stage-flip">
+          <view class="screen-label">
+            <text>{{phaseText}}</text>
+            <text class="screen-rule">三位数字</text>
+          </view>
+          <view class="flip-board {{isDrawing ? 'flipping' : ''}}">
+            <view wx:for="{{currentResult.groups[0].textList}}" wx:key="index" class="flip-digit">
+              <text class="digit-place">{{digitPlaceholders3[index]}}</text>
+              <text class="digit-value">{{item}}</text>
+            </view>
+          </view>
+          <button class="machine-start-btn warm {{isDrawing ? 'disabled' : ''}}" bindtap="onStartButtonTap">
+            <text class="start-dot"></text>
+            <text>{{startButtonText}}</text>
+          </button>
+        </view>
+
+        <view wx:elif="{{activeGameId === 'kl8'}}" class="play-stage stage-matrix">
+          <view class="screen-label">
+            <text>{{phaseText}}</text>
+            <text class="screen-rule">1-80 数字星幕</text>
+          </view>
+          <view class="kl8-mode-tabs">
+            <view
+              wx:for="{{activePlay.modes}}"
+              wx:key="id"
+              class="kl8-mode {{activeMode === item.id ? 'active' : ''}}"
+              data-mode="{{item.id}}"
+              bindtap="onModeTap"
+            >{{item.label}}</view>
+          </view>
+          <view class="matrix-board {{isDrawing ? 'scanning' : ''}}">
+            <view wx:for="{{kl8Cells}}" wx:key="value" class="matrix-cell {{item.selected ? 'selected' : ''}}">
+              <text>{{item.text}}</text>
+            </view>
+          </view>
+          <view class="result-cloud">
+            <text wx:for="{{currentResult.groups[0].textList}}" wx:key="index">{{item}}</text>
+          </view>
+          <button class="machine-start-btn purple {{isDrawing ? 'disabled' : ''}}" bindtap="onStartButtonTap">
+            <text class="start-dot"></text>
+            <text>{{startButtonText}}</text>
+          </button>
+        </view>
+
+        <view wx:elif="{{activeGameId === 'pl5'}}" class="play-stage stage-password">
+          <view class="screen-label">
+            <text>{{phaseText}}</text>
+            <text class="screen-rule">五位数字</text>
+          </view>
+          <view class="password-board {{isDrawing ? 'rolling' : ''}}">
+            <view wx:for="{{currentResult.groups[0].textList}}" wx:key="index" class="password-digit">
+              <text class="digit-place">{{digitPlaceholders5[index]}}</text>
+              <text class="digit-value">{{item}}</text>
+            </view>
+            <view class="scan-line"></view>
+          </view>
+          <button class="machine-start-btn green {{isDrawing ? 'disabled' : ''}}" bindtap="onStartButtonTap">
+            <text class="start-dot"></text>
+            <text>{{startButtonText}}</text>
+          </button>
+        </view>
       </view>
     </view>
 
@@ -99,29 +202,17 @@
         <text class="summary-title">{{currentSummary.title}}</text>
       </view>
       <view class="summary-grid">
-        <view class="summary-item">
-          <text>和值</text>
-          <text>{{currentSummary.sumText}}</text>
-        </view>
-        <view class="summary-item">
-          <text>奇偶</text>
-          <text>{{currentSummary.parityText}}</text>
-        </view>
-        <view class="summary-item">
-          <text>大小</text>
-          <text>{{currentSummary.sizeText}}</text>
-        </view>
-        <view class="summary-item">
-          <text>时间</text>
-          <text>{{currentSummary.timeText}}</text>
+        <view wx:for="{{currentSummary.items}}" wx:key="label" class="summary-item">
+          <text>{{item.label}}</text>
+          <text>{{item.value}}</text>
         </view>
       </view>
     </view>
 
     <view class="history-section">
       <view class="history-head">
-        <text>最近好运票根</text>
-        <text>{{history.length}} / 10</text>
+        <text>最近记录</text>
+        <text>{{activeHistory.length}} / 10</text>
       </view>
 
       <view class="ticket-viewport">
@@ -129,7 +220,7 @@
           class="ticket-row {{ticketMarqueeTransition ? 'ticket-row-animating' : ''}}"
           style="transform: translateY(-{{ticketMarqueeOffset}}rpx);"
         >
-          <block wx:if="{{history.length}}">
+          <block wx:if="{{activeHistory.length}}">
             <view
               wx:for="{{marqueeHistory}}"
               wx:key="marqueeKey"
@@ -144,8 +235,8 @@
               <view class="ticket-main">
                 <view class="ticket-label">{{item.label}}</view>
                 <view class="ticket-numbers">
-                  <text class="ticket-reds">{{item.redsText}}</text>
-                  <text class="ticket-blue">{{item.blueText}}</text>
+                  <text class="ticket-reds">{{item.primaryText}}</text>
+                  <text class="ticket-blue">{{item.secondaryText}}</text>
                 </view>
               </view>
             </view>
@@ -153,11 +244,11 @@
 
           <view wx:else class="ticket ticket-empty">
             <view class="ticket-time">
-              <text>双色球</text>
-              <text>等待开奖</text>
+              <text>{{activePlay.shortName}}</text>
+              <text>等待生成</text>
             </view>
             <view class="ticket-main">
-              <view class="ticket-label">拉下摇杆，生成第一张好运票根</view>
+              <view class="ticket-label">点击生成，保存第一张记录卡</view>
               <view class="ticket-placeholder">-- -- -- -- -- -- | --</view>
             </view>
           </view>
@@ -165,7 +256,7 @@
       </view>
     </view>
 
-    <view class="safe-note">号码随机生成，仅供娱乐。购彩请理性。</view>
+    <view class="safe-note">本工具仅用于随机数字生成与娱乐记录，不提供购买、预测或结果查询服务。</view>
   </view>
 </view>
 
@@ -175,22 +266,24 @@
   </view>
   <view class="result-card" catchtap="noop">
     <view class="result-glow"></view>
-    <view class="result-title">🎉 今日幸运号码</view>
-    <view class="result-subtitle">好运已经降临，记得分享给朋友～</view>
+    <view class="result-title">号码已随机生成</view>
+    <view class="result-subtitle">可保存为记录卡，仅作娱乐记录</view>
 
-    <view class="result-balls" wx:if="{{finalRecord}}">
-      <view wx:for="{{finalRecord.redsTextList}}" wx:key="index" class="result-ball red">
-        <text>{{item}}</text>
-      </view>
-      <view class="result-ball blue">
-        <text>{{finalRecord.blueText}}</text>
+    <view class="result-groups" wx:if="{{finalRecord}}">
+      <view wx:for="{{finalRecord.groups}}" wx:for-item="group" wx:key="key" class="result-group">
+        <text class="result-group-label">{{group.label}}</text>
+        <view class="result-balls">
+          <view wx:for="{{group.textList}}" wx:for-item="num" wx:key="index" class="result-ball {{group.key}}">
+            <text>{{num}}</text>
+          </view>
+        </view>
       </view>
     </view>
 
     <view class="modal-actions">
       <button class="modal-btn ghost" bindtap="saveCurrentPoster">截图保存</button>
       <button class="modal-btn secondary" open-type="share" data-record-id="{{finalRecord.id}}">分享好友</button>
-      <button class="modal-btn primary" bindtap="drawAgain">再来一注</button>
+      <button class="modal-btn primary" bindtap="drawAgain">再生成一组</button>
     </view>
   </view>
 </view>
@@ -201,21 +294,25 @@
     <view wx:if="{{activeTicket}}" class="sheet-ticket">
       <view class="sheet-top">
         <view>
-          <view class="sheet-title">历史幸运票根</view>
+          <view class="sheet-title">历史记录卡</view>
           <view class="sheet-time">{{activeTicket.dateText}} {{activeTicket.timeText}}</view>
         </view>
         <view class="sheet-tag">{{activeTicket.label}}</view>
       </view>
 
-      <view class="sheet-balls">
-        <view wx:for="{{activeTicket.redsTextList}}" wx:key="index" class="sheet-ball red">{{item}}</view>
-        <view class="sheet-ball blue">{{activeTicket.blueText}}</view>
+      <view class="sheet-groups">
+        <view wx:for="{{activeTicket.groups}}" wx:for-item="group" wx:key="key" class="sheet-group">
+          <text>{{group.label}}</text>
+          <view class="sheet-balls">
+            <view wx:for="{{group.textList}}" wx:for-item="num" wx:key="index" class="sheet-ball {{group.key}}">{{num}}</view>
+          </view>
+        </view>
       </view>
 
       <view class="sheet-display">{{activeTicket.display}}</view>
 
       <view class="sheet-actions">
-        <button class="sheet-btn primary" bindtap="saveActiveTicketPoster">保存好运图</button>
+        <button class="sheet-btn primary" bindtap="saveActiveTicketPoster">保存记录图</button>
         <button class="sheet-btn secondary" open-type="share" data-record-id="{{activeTicket.id}}">分享好友</button>
         <button class="sheet-btn ghost" bindtap="copyActiveTicket">复制号码</button>
       </view>

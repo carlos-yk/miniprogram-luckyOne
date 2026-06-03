@@ -41,10 +41,13 @@ function createPlayList() {
   return PLAY_ORDER.map((id) => PLAY_TYPES[id]);
 }
 
-function createKl8Cells() {
+function createKl8Cells(selectedValues) {
+  const selected = selectedValues || [];
+
   return Array.from({ length: 80 }, (_, index) => ({
     value: index + 1,
-    text: formatBall(index + 1)
+    text: formatBall(index + 1),
+    selected: selected.includes(index + 1)
   }));
 }
 
@@ -231,6 +234,7 @@ Page({
       activeMode: mode,
       activePlay: play,
       currentResult,
+      kl8Cells: this.createKl8CellsForResult(currentResult),
       currentReds: this.getGroupTextList(currentResult, 0),
       currentBlue: this.getGroupText(currentResult, 1),
       currentSummary: createPlaySummary(currentResult),
@@ -269,6 +273,7 @@ Page({
     this.setData({
       activeMode: mode,
       currentResult,
+      kl8Cells: this.createKl8CellsForResult(currentResult),
       currentSummary: createPlaySummary(currentResult),
       activeHistory,
       finalRecord: null,
@@ -313,6 +318,7 @@ Page({
       lockedRedCount: 0,
       blueLocked: false,
       currentResult: emptyResult,
+      kl8Cells: this.createKl8CellsForResult(emptyResult),
       currentReds: this.getGroupTextList(emptyResult, 0),
       currentBlue: this.getGroupText(emptyResult, 1),
       currentSummary: createPlaySummary(emptyResult),
@@ -342,6 +348,7 @@ Page({
     this.stopRolling();
     this.setData({
       currentResult: this.createResultFromRecord(record),
+      kl8Cells: this.createKl8CellsForResult(record),
       currentReds: this.getGroupTextList(record, 0),
       currentBlue: this.getGroupText(record, 1),
       blueLocked: true,
@@ -377,6 +384,7 @@ Page({
 
       this.setData({
         currentResult: rollingResult,
+        kl8Cells: this.createKl8CellsForResult(rollingResult),
         currentReds: this.getGroupTextList(rollingResult, 0),
         currentBlue: this.getGroupText(rollingResult, 1)
       });
@@ -439,16 +447,20 @@ Page({
     let globalIndex = 0;
     const groups = (record.groups || []).map((group, groupIndex) => {
       const config = (play.groups || [])[groupIndex] || {};
-      const textList = (group.textList || []).map((text) => {
+      const values = [];
+      const textList = (group.textList || []).map((text, valueIndex) => {
         const isLocked = globalIndex < lockedCount;
         globalIndex += 1;
+        if (isLocked && group.values && group.values[valueIndex] !== undefined) {
+          values.push(group.values[valueIndex]);
+        }
         return isLocked ? text : this.getRandomText(config);
       });
 
       return {
         key: group.key,
         label: group.label,
-        values: group.values,
+        values,
         textList,
         text: textList.join(' ')
       };
@@ -478,6 +490,14 @@ Page({
   getGroupText(result, index) {
     const group = result && result.groups && result.groups[index];
     return group && group.text ? group.text : '--';
+  },
+
+  createKl8CellsForResult(result) {
+    if (!result || result.gameId !== 'kl8' || !result.groups || !result.groups[0]) {
+      return createKl8Cells();
+    }
+
+    return createKl8Cells(result.groups[0].values || []);
   },
 
   getTicketMarqueeData(history) {
