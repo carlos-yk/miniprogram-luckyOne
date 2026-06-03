@@ -16,7 +16,7 @@
   height: 480rpx;
   border-radius: 999rpx;
   filter: blur(80rpx);
-  opacity: 0.18;
+  opacity: 0.13;
   pointer-events: none;
 }
 
@@ -59,12 +59,12 @@
 
 .play-tabs {
   display: flex;
-  gap: 10rpx;
+  gap: 8rpx;
   padding: 0 2rpx 8rpx;
 }
 
 .play-tab {
-  width: 132rpx;
+  width: 126rpx;
   height: 64rpx;
   padding: 8rpx 12rpx;
   border-radius: 999rpx;
@@ -149,77 +149,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.home-stats {
-  position: relative;
-  z-index: 2;
-  height: 126rpx;
-  flex-shrink: 0;
-  padding: 16rpx;
-  border-radius: 30rpx;
-  border: 1rpx solid rgba(255, 255, 255, 0.09);
-  background:
-    radial-gradient(circle at 10% 20%, rgba(255, 209, 102, 0.18), transparent 34%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
-  display: grid;
-  grid-template-columns: 1.08fr 1.2fr 1fr;
-  align-items: center;
-  gap: 16rpx;
-  box-shadow:
-    0 14rpx 34rpx rgba(0, 0, 0, 0.22),
-    inset 0 1rpx 0 rgba(255, 255, 255, 0.08);
-}
-
-.stat-card {
-  min-width: 0;
-  height: 86rpx;
-  padding: 12rpx 14rpx;
-  border-radius: 22rpx;
-  background: rgba(5, 8, 15, 0.36);
-  border: 1rpx solid rgba(255, 255, 255, 0.07);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.stat-primary {
-  background:
-    radial-gradient(circle at 14% 28%, rgba(255, 209, 102, 0.16), transparent 42%),
-    rgba(5, 8, 15, 0.38);
-}
-
-.stat-label {
-  color: rgba(255, 255, 255, 0.58);
-  font-size: 18rpx;
-  line-height: 24rpx;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.stat-value-line {
-  margin-top: 6rpx;
-  display: flex;
-  align-items: baseline;
-  color: #ffd166;
-}
-
-.stat-value {
-  font-family: "DIN Alternate", "Arial Rounded MT Bold", Arial, sans-serif;
-  font-size: 34rpx;
-  line-height: 36rpx;
-  font-weight: 900;
-  text-shadow: 0 0 20rpx rgba(255, 209, 102, 0.42);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.stat-unit {
-  margin-left: 4rpx;
-  font-size: 20rpx;
-  font-weight: 800;
 }
 
 .machine-shell {
@@ -1120,63 +1049,6 @@
   opacity: 0.82;
 }
 
-.ticket-viewport {
-  width: 100%;
-  height: 312rpx;
-  overflow: hidden;
-}
-
-.ticket-row {
-  padding: 0 24rpx;
-  display: block;
-  will-change: transform;
-}
-
-.ticket-row-animating {
-  transition: transform 0.56s cubic-bezier(0.2, 0.82, 0.22, 1);
-}
-
-.ticket {
-  position: relative;
-  width: 100%;
-  height: 96rpx;
-  margin-bottom: 12rpx;
-  padding: 10rpx 22rpx 10rpx 32rpx;
-  border-radius: 20rpx;
-  background:
-    linear-gradient(135deg, rgba(255, 77, 109, 0.18), rgba(79, 134, 255, 0.14)),
-    rgba(9, 12, 22, 0.86);
-  border: 1rpx solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 10rpx 24rpx rgba(0, 0, 0, 0.28);
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  gap: 22rpx;
-}
-
-.ticket:last-child {
-  margin-bottom: 0;
-}
-
-.ticket::before,
-.ticket::after {
-  content: "";
-  position: absolute;
-  top: 36rpx;
-  width: 26rpx;
-  height: 26rpx;
-  border-radius: 50%;
-  background: #0a0d16;
-}
-
-.ticket::before {
-  left: -13rpx;
-}
-
-.ticket::after {
-  right: -13rpx;
-}
-
 .ticket-time {
   width: 132rpx;
   flex-shrink: 0;
@@ -1238,12 +1110,6 @@
   color: #77a8ff;
 }
 
-.ticket-empty {
-  width: 100%;
-  border-style: dashed;
-  opacity: 0.78;
-}
-
 .ticket-placeholder {
   color: rgba(255, 255, 255, 0.42);
 }
@@ -1300,6 +1166,7 @@
   position: relative;
   width: 100%;
   max-width: 730rpx;
+  max-height: calc(100vh - 96rpx);
   min-height: 650rpx;
   padding: 34rpx 34rpx 42rpx;
   border-radius: 52rpx;
@@ -1311,7 +1178,7 @@
   box-shadow:
     0 28rpx 80rpx rgba(0, 0, 0, 0.6),
     0 0 44rpx rgba(255, 77, 109, 0.16);
-  overflow: hidden;
+  overflow-y: auto;
   animation: resultIn 0.42s cubic-bezier(0.18, 0.9, 0.28, 1.22);
 }
 
@@ -1391,24 +1258,6 @@
   font-size: 24rpx;
   line-height: 32rpx;
   text-align: center;
-}
-
-.result-meta {
-  position: relative;
-  width: 260rpx;
-  margin: 18rpx auto 0;
-  padding: 8rpx 18rpx;
-  border-radius: 999rpx;
-  background: rgba(255, 209, 102, 0.12);
-  border: 1rpx solid rgba(255, 209, 102, 0.18);
-  color: #ffd166;
-  font-size: 22rpx;
-  line-height: 28rpx;
-  font-weight: 800;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .result-groups {

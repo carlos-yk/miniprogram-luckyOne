@@ -18,10 +18,6 @@ const {
 const HISTORY_KEY = 'LUCK7_HISTORY';
 const HISTORY_LIMIT = 10;
 const LEVER_TRIGGER = 28;
-const TICKET_VISIBLE_COUNT = 3;
-const TICKET_STEP_RPX = 108;
-const TICKET_MARQUEE_INTERVAL = 2200;
-const TICKET_MARQUEE_TRANSITION = 560;
 const RECORD_LABELS = [
   '随机数字卡',
   '霓虹记录卡',
@@ -86,10 +82,6 @@ Page({
     currentBlue: '--',
     finalRecord: null,
     history: [],
-    marqueeHistory: [],
-    ticketMarqueeOffset: 0,
-    ticketMarqueeTransition: true,
-    ticketMarqueeEnabled: false,
     homeStats: {
       todayCountText: '0',
       latestTimeText: '--:--',
@@ -118,23 +110,16 @@ Page({
       todayText: this.getTodayText(),
       homeStats: createHomeStats(history, Date.now(), this.data.activeGameId, this.data.activeMode),
       history,
-      activeHistory,
-      ...this.getTicketMarqueeData(activeHistory)
-    }, () => this.restartTicketMarquee(activeHistory.length));
-  },
-
-  onShow() {
-    this.restartTicketMarquee((this.data.activeHistory || []).length);
+      activeHistory
+    });
   },
 
   onHide() {
     this.stopRolling();
-    this.stopTicketMarquee();
   },
 
   onUnload() {
     this.stopRolling();
-    this.stopTicketMarquee();
   },
 
   onShareAppMessage(event) {
@@ -253,9 +238,8 @@ Page({
       showResultModal: false,
       showTicketSheet: false,
       activeTicket: null,
-      homeStats: createHomeStats(this.data.history, Date.now(), gameId, mode),
-      ...this.getTicketMarqueeData(activeHistory)
-    }, () => this.restartTicketMarquee(activeHistory.length));
+      homeStats: createHomeStats(this.data.history, Date.now(), gameId, mode)
+    });
   },
 
   onModeTap(event) {
@@ -284,9 +268,8 @@ Page({
       machineHint: '点击按钮生成一组数字',
       startButtonText: '生成一组',
       lockedCount: 0,
-      homeStats: createHomeStats(this.data.history, Date.now(), this.data.activeGameId, mode),
-      ...this.getTicketMarqueeData(activeHistory)
-    }, () => this.restartTicketMarquee(activeHistory.length));
+      homeStats: createHomeStats(this.data.history, Date.now(), this.data.activeGameId, mode)
+    });
   },
 
   async startDraw() {
@@ -375,9 +358,8 @@ Page({
       showResultModal: true,
       isDrawing: false,
       leverText: '下拉生成',
-      startButtonText: '再生成一组',
-      ...this.getTicketMarqueeData(activeHistory)
-    }, () => this.restartTicketMarquee(activeHistory.length));
+      startButtonText: '再生成一组'
+    });
   },
 
   startRolling(record) {
@@ -500,78 +482,6 @@ Page({
     }
 
     return createKl8Cells(result.groups[0].values || []);
-  },
-
-  getTicketMarqueeData(history) {
-    const ticketMarqueeEnabled = history.length > TICKET_VISIBLE_COUNT;
-    const marqueeHistory = (ticketMarqueeEnabled ? history.concat(history) : history).map((item, index) => (
-      Object.assign({}, item, {
-        marqueeKey: `${item.id}-${index}`
-      })
-    ));
-
-    return {
-      marqueeHistory,
-      ticketMarqueeEnabled,
-      ticketMarqueeOffset: 0,
-      ticketMarqueeTransition: true
-    };
-  },
-
-  restartTicketMarquee(count) {
-    this.stopTicketMarquee();
-    this.ticketMarqueeIndex = 0;
-
-    if (count <= TICKET_VISIBLE_COUNT) {
-      return;
-    }
-
-    this.ticketMarqueeTimer = setInterval(() => {
-      this.advanceTicketMarquee(count);
-    }, TICKET_MARQUEE_INTERVAL);
-  },
-
-  advanceTicketMarquee(count) {
-    const nextIndex = (this.ticketMarqueeIndex || 0) + 1;
-    this.ticketMarqueeIndex = nextIndex;
-
-    this.setData({
-      ticketMarqueeTransition: true,
-      ticketMarqueeOffset: nextIndex * TICKET_STEP_RPX
-    });
-
-    if (nextIndex < count) {
-      return;
-    }
-
-    this.ticketMarqueeResetTimer = setTimeout(() => {
-      this.ticketMarqueeIndex = 0;
-      this.setData({
-        ticketMarqueeTransition: false,
-        ticketMarqueeOffset: 0
-      });
-
-      this.ticketMarqueeResumeTimer = setTimeout(() => {
-        this.setData({ ticketMarqueeTransition: true });
-      }, 40);
-    }, TICKET_MARQUEE_TRANSITION);
-  },
-
-  stopTicketMarquee() {
-    if (this.ticketMarqueeTimer) {
-      clearInterval(this.ticketMarqueeTimer);
-      this.ticketMarqueeTimer = null;
-    }
-
-    if (this.ticketMarqueeResetTimer) {
-      clearTimeout(this.ticketMarqueeResetTimer);
-      this.ticketMarqueeResetTimer = null;
-    }
-
-    if (this.ticketMarqueeResumeTimer) {
-      clearTimeout(this.ticketMarqueeResumeTimer);
-      this.ticketMarqueeResumeTimer = null;
-    }
   },
 
   closeResultModal() {
