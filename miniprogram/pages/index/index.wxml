@@ -285,10 +285,14 @@
     </view>
 
     <view class="modal-actions">
-      <button class="modal-btn ghost" bindtap="saveCurrentPoster">保存记录图</button>
-      <button class="modal-btn secondary" open-type="share" data-record-id="{{finalRecord.id}}">分享好友</button>
-      <button class="modal-btn secondary" bindtap="copyCurrentRecord">复制号码</button>
-      <button class="modal-btn primary" bindtap="drawAgain">再生成一组</button>
+      <view class="modal-action-row">
+        <button class="modal-btn ghost" bindtap="saveCurrentPoster">保存记录图</button>
+        <button class="modal-btn secondary" open-type="share" data-record-id="{{finalRecord.id}}">分享好友</button>
+      </view>
+      <view class="modal-action-row">
+        <button class="modal-btn secondary" bindtap="copyCurrentRecord">复制号码</button>
+        <button class="modal-btn primary" bindtap="drawAgain">再生成一组</button>
+      </view>
     </view>
   </view>
 </view>
