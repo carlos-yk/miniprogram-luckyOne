@@ -74,7 +74,7 @@ Top-to-bottom structure:
    - Details open in a bottom sheet.
 
 7. Safety note
-   - Fixed text: `本工具仅用于随机数字生成与娱乐记录，不提供购买、预测或结果查询服务。`
+   - Fixed text: `本工具仅用于随机数字生成与娱乐记录，不提供交易、建议或结果查询服务。`
 
 ## Unified Page Layout Rules
 
@@ -279,7 +279,7 @@ High-risk copy must be removed or replaced.
 | 命中率 | 重合记录 |
 | 预测走势 | 号码摘要 |
 | 推荐号码 | 随机生成结果 |
-| 购彩请理性 | 不提供购买、预测或结果查询服务 |
+| 购彩请理性 | 不提供交易、建议或结果查询服务 |
 
 Forbidden in V2.0:
 

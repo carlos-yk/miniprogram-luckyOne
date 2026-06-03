@@ -141,9 +141,11 @@ Page({
     const recordId = event.target && event.target.dataset && event.target.dataset.recordId;
     const record = this.findRecord(recordId) || this.data.finalRecord;
     const display = record ? record.display : '随机数字卡';
+    const typeText = record ? record.typeText : '';
+    const prefix = typeText ? `${typeText}：` : '';
 
     return {
-      title: `LUCK7 随机号码卡：${display}`,
+      title: `LUCK7 随机号码卡：${prefix}${display}`,
       path: '/pages/index/index'
     };
   },
@@ -712,7 +714,7 @@ Page({
 
     ctx.setFillStyle('rgba(255,255,255,0.52)');
     ctx.setFontSize(22);
-    ctx.fillText(`${record.type} · ${record.dateText} ${record.timeText}`, 343, 724);
+    ctx.fillText(`${record.typeText || record.type} · ${record.dateText} ${record.timeText}`, 343, 724);
     ctx.fillText('仅用于随机数字生成，不提供交易、建议或结果查询服务。', 343, 778);
 
     ctx.draw(false, () => {
@@ -801,6 +803,9 @@ Page({
       display: record.display || formatPlayResult({ groups }),
       primaryText: groups[0] ? groups[0].text : '',
       secondaryText: groups[1] ? groups[1].text : '',
+      modeText: record.modeLabel || '',
+      typeText: record.modeLabel ? `${record.type} · ${record.modeLabel}` : record.type,
+      compactTypeText: record.modeLabel ? `${record.type}${record.modeLabel}` : record.type,
       marqueeKey: `${record.id}-${record.gameId}-${record.mode}`,
       redsTextList: redGroup.textList,
       redsText: redGroup.text,
